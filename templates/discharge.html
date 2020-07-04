@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="legend-bottom mb-4">Discharge Patient</legend>
+                <div class="form-group">
+                    {{ form.assign_bed.label(class="form-control-label") }}
+                    {{ form.assign_bed(class="form-control-lg form-control") }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

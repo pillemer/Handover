@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<br>
+    <div class="container">
+        <h1>Patient List</h1>
+    </div>
+    <table class="table table-striped">
+        <thead class="thead-dark"><tr><th>Bed number</th>
+            <th>Patient Number</th>
+            <th>Presenting complaint</th>
+            <th></th></tr></thead>
+        <tbody>
+        {% for bed in beds %}
+        <tr><td>{{ bed.bed_number }}</td>
+            <td><a href="{{ url_for('patient', pn=bed.patient.identifying_number) }}">{{ bed.patient.identifying_number }}</a></td>
+            <td>{{ bed.patient.presenting_complaint }}</td>
+            {% if bed.patient.identifying_number == NULL %}
+                <td></td>
+            {% else %}
+                <td><a class="btn btn-secondary btn-sm" href="{{ url_for('edit', pn=bed.patient.identifying_number) }}">Edit</a></td></tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+        </table>
+{% endblock content %}
