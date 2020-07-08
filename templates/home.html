@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1 style="font-size: 50pt; align-content: right;">Hello {{ current_user.username }}</h1>
+    {% if current_user.is_authenticated %}
+    <h1 style="font-size: 50pt;">Hello {{ current_user.username }}</h1><br>   
+    {% else %}
+    <h1 style="font-size: 50pt;">Please log in or create an account</h1><br>
+    {% endif %}
 {% endblock content %}

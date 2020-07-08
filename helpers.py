@@ -5,9 +5,10 @@ from handover.models import User, Patient, Bed
 from flask import flash
 
 # helper function to popluate the dropdown list of beds for each patient
-def bed_choices(id=None):   
-    if id != None:
-        current_bed = Bed.query.filter_by(patient_id = id).first()  # bed currently assigned to patient
+def bed_choices(pn=None):   
+    if pn != None:
+        patient= Patient.query.filter_by(identifying_number=pn).first()
+        current_bed = patient.location[0]  # bed currently assigned to patient
         choices=[(current_bed.bed_number, current_bed.bed_number)]
     else:
         choices = []

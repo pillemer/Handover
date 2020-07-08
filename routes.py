@@ -1,7 +1,7 @@
 from flask import render_template, redirect, flash, url_for, request
 from handover import app, db, bcrypt
 from handover.forms import RegistrationForm, LoginForm, AdmitForm, EditForm
-from handover.models import User, Bed, Patient
+from handover.models import User, Bed, Patient, Investigation
 from flask_login import login_user, logout_user, current_user, login_required
 from handover.helpers import bed_choices, flash_errors
 
@@ -80,11 +80,10 @@ def admit():
                             medications = form.medications.data,
                             social_history = form.social_history.data,
                             allergies = form.allergies.data,
-                            investigations = form.investigations.data,
                             plan = form.plan.data,
                             date_of_birth = form.date_of_birth.data,) 
         bed=Bed.query.filter_by(bed_number = form.assign_bed.data).first()
-        bed.patient_id = form.identifying_number.data
+        bed.patient_id = patient.identifying_number
         bed.user_id = current_user.id
         db.session.add(patient)
         db.session.commit()
@@ -98,7 +97,7 @@ def admit():
 def patient(pn):
     "Will display infromation about the selected patient"
     patient = Patient.query.filter_by(identifying_number=pn).first()
-    bed = Bed.query.filter_by(patient_id = patient.identifying_number).first()
+    bed = patient.location
     return render_template('patient.html', title='Patient info', patient=patient, bed=bed)
 
 
@@ -115,12 +114,11 @@ def edit(pn):
         patient.medications = form.medications.data
         patient.social_history = form.social_history.data
         patient.allergies = form.allergies.data
-        patient.investigations = form.investigations.data
         patient.plan = form.plan.data
-        current_bed = Bed.query.filter_by(patient_id = pn).first()
+        current_bed = patient.location[0]
         current_bed.patient_id = None  # Set the old bed back to empty
         new_bed=Bed.query.filter_by(bed_number = form.assign_bed.data).first()
-        new_bed.patient_id = pn # assign patient to new bed
+        new_bed.patient_id = patient.identifying_number # assign patient to new bed
         new_bed.user_id, current_bed.user_id = current_user.id, current_user.id
         db.session.commit()
         flash('Patient information updated successfuly', 'success')
@@ -130,7 +128,6 @@ def edit(pn):
     form.medications.data = patient.medications
     form.social_history.data = patient.social_history
     form.allergies.data = patient.allergies
-    form.investigations.data = patient.investigations
     form.plan.data = patient.plan
     return render_template('edit.html', title='Edit patient info', form=form, patient=patient)
 
@@ -140,7 +137,7 @@ def edit(pn):
 def discharge(pn):
     "Will allow user to remove a patient from the database"
     patient = Patient.query.filter_by(identifying_number = pn).first()
-    bed = Bed.query.filter_by(patient_id = pn).first()
+    bed = patient.location
     bed.patient_id = None
     db.session.delete(patient)
     db.session.commit()
@@ -148,6 +145,15 @@ def discharge(pn):
     return redirect(url_for('patient_list'))
 
 
+@app.route('/')
+@app.route('/job_list')
+def job_list():
+    jobs = Investigation.query.all()
+    return render_template('job_list.html', title='Investigations', jobs=jobs)
+
 ########################################  TODO  ###########################################################
 
-# Add functionality
+# add flask_migrate and use db migration to upidate the databse further. check the huge flask miniblog tutorial.
+# Should be able to update this list from the patient notes
+# Add functionality to /discharge that will delete all the entires relating to that patient in the investigations database
+# Add way to mark jobs as ordered and chased and maybe even a timeastamp

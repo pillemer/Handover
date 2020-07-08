@@ -13,7 +13,7 @@ from flask_login import UserMixin
 # >>> user = User.query.get(1)  -query database with id filter
 # >>> user.id /.username /.password  -to access individual datum 
 
-
+# TODO: Add a colum to the bed table with the ward information. then you can sort the beds by ward and even have two drop down selection when assigning beds. Ward then bed number.
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -32,7 +32,7 @@ class User(db.Model, UserMixin):
 
 class Bed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    bed_number = db.Column(db.String(20), unique=True, nullable=False)
+    bed_number = db.Column(db.Text, unique=True, nullable=False)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.identifying_number'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -42,18 +42,17 @@ class Bed(db.Model):
 
 class Patient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    presenting_complaint = db.Column(db.String(1000), nullable=False)
-    past_medical_history = db.Column(db.String(1000))
-    past_surgical_history = db.Column(db.String(1000))
-    medications = db.Column(db.String(1000))
-    social_history = db.Column(db.String(1000))
-    allergies = db.Column(db.String(1000))
-    investigations = db.Column(db.String(1000)) # could be it's own table (or split into additional columns [bloods, scans, etc..]) # noqa E501
-    plan = db.Column(db.String(1000))
-    date_of_birth = db.Column(db.String(20), nullable=False)
-    identifying_number = db.Column(db.String(20), nullable=False, unique=True) # URI or other hospital generated number
-    activity = db.relationship('Bed', backref='patient', lazy=True)
-
+    presenting_complaint = db.Column(db.Text, nullable=False)
+    past_medical_history = db.Column(db.Text)
+    past_surgical_history = db.Column(db.Text)
+    medications = db.Column(db.Text)
+    social_history = db.Column(db.Text)
+    allergies = db.Column(db.Text)
+    plan = db.Column(db.Text)
+    date_of_birth = db.Column(db.Text, nullable=False)
+    identifying_number = db.Column(db.Text(20), nullable=False, unique=True) # URI or other hospital generated number
+    location = db.relationship('Bed', backref='patient', lazy=True)
+    investigations = db.relationship('Investigation', backref='subject', lazy=True)
 
     def __repr__(self):
         return f"""Patient('{self.presenting_complaint}', 
@@ -62,7 +61,18 @@ class Patient(db.Model):
                         '{self.medications}', 
                         '{self.social_history}', 
                         '{self.allergies}', 
-                        '{self.investigations}', 
                         '{self.plan}'
                         '{self.date_of_birth}', 
                         '{self.identifying_number}')"""
+
+
+class Investigation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    task = db.Column(db.Text)
+    ordered = db.Column(db.Boolean, default=False)
+    done = db.Column(db.Boolean, default=False)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
+
+    def __repr__(self):
+        return f"Investigation('{self.task}', '{self.ordered}', '{self.done}', '{self.patient_id}')"
+
