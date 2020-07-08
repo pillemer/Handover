@@ -16,11 +16,10 @@
             <tr><td>Medications:</td><td>{{ patient.medications }}</td></tr>
             <tr><td>Social History:</td><td>{{ patient.social_history }}</td></tr>
             <tr><td>Allergies:</td><td>{{ patient.allergies }}</td></tr>
-            <tr><td>Investigations:</td><td>{{ patient.investigations }}</td></tr>
         </tbody>
         </table>
         <div class="container">
-            <button class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#dishcargeModal" href="{{ url_for('discharge', pn=bed.patient.identifying_number) }}">Discharge</button>
+            <button class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#dishcargeModal" href="{{ url_for('discharge', pn=patient.identifying_number) }}">Discharge</button>
         </div>
         <br>
         <!-- Modal -->
@@ -40,7 +39,7 @@
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <form action="{{ url_for('discharge', pn=bed.patient.identifying_number) }}" method="POST">
+                <form action="{{ url_for('discharge', pn=patient.identifying_number) }}" method="POST">
                     <input class='btn btn-danger' type="submit" value="Discharge">
                 </form>
                 </div>

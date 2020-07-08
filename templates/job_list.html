@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    {% if current_user.is_authenticated %}
+    <h1 style="font-size: 50pt;">Hello {{ current_user.username }}</h1><br>   
+        <div class="card" style="width: 30rem;">
+            <ul class="list-group list-group-flush">
+            {% for job in jobs|sort(attribute='subject.identifying_number') %}
+                <li class="list-group-item"> 
+                    {{ job.subject.identifying_number }}: 
+                    {% if job.ordered %} <del> {% endif %} <strong>{{ job.task }}</strong> {% if job.ordered %} </del> {% endif %}
+                    <a href="#" class="btn btn-sm btn-outline-primary py-0 float-right ml-2" style="font-size: 0.8em;">Mark as Done</a>
+                    <a href="#" class="btn btn-sm btn-outline-primary py-0 float-right" style="font-size: 0.8em;">Mark as Ordered</a>
+                </li>   
+        {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+    <h1 style="font-size: 50pt;">Please log in to view current jobs</h1><br>
+    {% endif %}
+{% endblock content %}
