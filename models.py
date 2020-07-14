@@ -25,6 +25,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     activity = db.relationship('Bed', backref='author', lazy=True)
+    jobs = db.relationship('Investigation', backref='author', lazy=True)
 
     def __repr__(self):
         return f"User('{self.username}')"
@@ -72,7 +73,8 @@ class Investigation(db.Model):
     ordered = db.Column(db.Boolean, default=False)
     done = db.Column(db.Boolean, default=False)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
+    assigned_to = db.Column(db.Integer, db.ForeignKey('user.id')) 
 
     def __repr__(self):
-        return f"Investigation('{self.task}', '{self.ordered}', '{self.done}', '{self.patient_id}')"
+        return f"Investigation('{self.task}', '{self.ordered}', '{self.done}', '{self.patient_id}', '{self.assigned_to}')"
 

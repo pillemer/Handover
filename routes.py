@@ -145,15 +145,39 @@ def discharge(pn):
     return redirect(url_for('patient_list'))
 
 
-@app.route('/')
-@app.route('/job_list')
+@app.route('/job_list', methods=['GET', 'POST'])
+@login_required
 def job_list():
+    "List all current jobs"
     jobs = Investigation.query.all()
+    user = User.query.all()
     return render_template('job_list.html', title='Investigations', jobs=jobs)
 
-########################################  TODO  ###########################################################
 
-# add flask_migrate and use db migration to upidate the databse further. check the huge flask miniblog tutorial.
-# Should be able to update this list from the patient notes
-# Add functionality to /discharge that will delete all the entires relating to that patient in the investigations database
-# Add way to mark jobs as ordered and chased and maybe even a timeastamp
+@app.route('/my_jobs', methods=['GET', 'POST'])
+@login_required
+def my_jobs():
+    "List all open jobs that are assigned to current user"
+    task_list = Investigation.query.filter_by(assigned_to=current_user.id)
+    return render_template('my_jobs.html', title='My Jobs', task_list=task_list)
+
+
+@app.route('/job_list/<jn>/assign_job', methods=['GET', 'POST'])
+@login_required
+def assign_job(jn):
+    "Will allow user to remove a patient from the database"
+    job = Investigation.query.filter_by(id = jn).first()
+    job.assigned_to = current_user.id
+    db.session.commit()
+    flash('Job has been assigned to you.', 'success')
+    return redirect(url_for('job_list'))
+
+
+
+########################################  TODO  ###########################################################
+# Should be able to select jobs to assign to yourself and display them in your job list.
+# if job selected is already on somebody's list you should have a little modal warning before assignment
+#
+# add flask_migrate and use db migration to update the databse further. check the huge flask miniblog tutorial.
+# Should be able to update the job list from the patient notes
+# Add way to mark jobs as ordered and chased and maybe even a timeastamp and who it is assigned to.
