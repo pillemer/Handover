@@ -97,8 +97,7 @@ def admit():
 def patient(pn):
     "Will display infromation about the selected patient"
     patient = Patient.query.filter_by(identifying_number=pn).first()
-    bed = patient.location
-    return render_template('patient.html', title='Patient info', patient=patient, bed=bed)
+    return render_template('patient.html', title='Patient info', patient=patient)
 
 
 @app.route('/patient/<pn>/edit', methods=['GET', 'POST'])
@@ -115,6 +114,7 @@ def edit(pn):
         patient.social_history = form.social_history.data
         patient.allergies = form.allergies.data
         patient.plan = form.plan.data
+        patient.diagnosis = form.diagnosis.data
         current_bed = patient.location[0]
         current_bed.patient_id = None  # Set the old bed back to empty
         new_bed=Bed.query.filter_by(bed_number = form.assign_bed.data).first()
@@ -122,7 +122,7 @@ def edit(pn):
         new_bed.user_id, current_bed.user_id = current_user.id, current_user.id
         db.session.commit()
         flash('Patient information updated successfuly', 'success')
-        return redirect(url_for('patient_list'))
+        return redirect(url_for('patient', pn = patient.identifying_number))
     form.past_medical_history.data = patient.past_medical_history
     form.past_surgical_history.data = patient.past_surgical_history
     form.medications.data = patient.medications
@@ -137,9 +137,11 @@ def edit(pn):
 def discharge(pn):
     "Will allow user to remove a patient from the database"
     patient = Patient.query.filter_by(identifying_number = pn).first()
+    Patient_jobs = Investigation.query.filter_by(patient_id = patient.id)
     bed = patient.location
     bed.patient_id = None
     db.session.delete(patient)
+    db.session.delete(patient_jobs)
     db.session.commit()
     flash('Patient has been discharged', 'danger')
     return redirect(url_for('patient_list'))
@@ -150,7 +152,8 @@ def discharge(pn):
 def job_list():
     "List all current jobs"
     jobs = Investigation.query.all()
-    user = User.query.all()
+    # users = User.query.all()
+    # add ability to sort by user
     return render_template('job_list.html', title='Investigations', jobs=jobs)
 
 
@@ -165,7 +168,6 @@ def my_jobs():
 @app.route('/job_list/<jn>/assign_job', methods=['GET', 'POST'])
 @login_required
 def assign_job(jn):
-    "Will allow user to remove a patient from the database"
     job = Investigation.query.filter_by(id = jn).first()
     job.assigned_to = current_user.id
     db.session.commit()
@@ -173,11 +175,48 @@ def assign_job(jn):
     return redirect(url_for('job_list'))
 
 
+@app.route('/patient/<pn>/add_job', methods=['POST'])
+@login_required
+def add_job(pn):
+    patient = Patient.query.filter_by(identifying_number=pn).first()
+    text =request.form['text']
+    job = Investigation(task = text, patient_id=patient.id)
+    db.session.add(job)
+    db.session.commit()
+    flash('Job added successfuly', 'success')
+    return redirect(url_for('patient', pn = patient.identifying_number))@app.route('/patient/<pn>/add_job', methods=['POST'])
+
+@app.route('/job_list/<jn>/advance_job', methods=['GET', 'POST'])
+@login_required
+def advance_job(jn):
+    "Mark job as ordered if not ordered, and done if already ordered."
+    job = Investigation.query.filter_by(id=jn).first()
+    if job.ordered:
+        job.done = True
+    else:
+        job.ordered = True
+    db.session.commit()
+    flash('Job updated successfuly', 'success')
+    return redirect(url_for('my_jobs'))
+
+
+@app.route('/job_list/<jn>/undo_advance_job', methods=['GET', 'POST'])
+@login_required
+def undo_advance_job(jn):
+    "Mark job as not ordered if not ordered, and ordered if done."
+    job = Investigation.query.filter_by(id=jn).first()
+    if job.done:
+        job.done = False
+    else:
+        job.ordered = False
+    db.session.commit()
+    flash('Job updated successfuly', 'success')
+    return redirect(url_for('my_jobs'))
+
 
 ########################################  TODO  ###########################################################
-# Should be able to select jobs to assign to yourself and display them in your job list.
 # if job selected is already on somebody's list you should have a little modal warning before assignment
 #
-# add flask_migrate and use db migration to update the databse further. check the huge flask miniblog tutorial.
 # Should be able to update the job list from the patient notes
 # Add way to mark jobs as ordered and chased and maybe even a timeastamp and who it is assigned to.
+

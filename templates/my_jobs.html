@@ -6,15 +6,16 @@
             <ul class="list-group list-group-flush">
             {% for job in task_list %}
                 {% if job.ordered and not job.done %}  
-                    <li class="list-group-item list-group-item-danger">
+                    <li class="list-group-item list-group-item-danger">◪
                 {% elif job.done and job.ordered %}
-                    <li class="list-group-item list-group-item-success">
+                    <li class="list-group-item list-group-item-success">◼
                 {% else %}
-                    <li class="list-group-item list-group-item-primary">
+                    <li class="list-group-item list-group-item-primary">◻
                 {% endif %}
                     {{ job.subject.identifying_number }}: 
                     {% if job.ordered and not job.done %} Chase {% endif %} <strong>{{ job.task }}</strong>
-                    <a href="#" class="btn btn-sm btn-outline-primary py-0 float-right ml-2" style="font-size: 0.8em;">Mark as done</a>
+                    <a href="{{ url_for('undo_advance_job', jn=job.id) }}" class="btn btn-sm btn-outline-primary py-0 float-right ml-2" style="font-size: 0.8em;">undo</a>
+                    <a href="{{ url_for('advance_job', jn=job.id) }}" class="btn btn-sm btn-outline-primary py-0 float-right ml-2" style="font-size: 0.8em;">Mark as done</a>
                 </li>   
         {% endfor %}
             </ul>

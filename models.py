@@ -50,6 +50,7 @@ class Patient(db.Model):
     social_history = db.Column(db.Text)
     allergies = db.Column(db.Text)
     plan = db.Column(db.Text)
+    diagnosis = db.Column(db.Text)
     date_of_birth = db.Column(db.Text, nullable=False)
     identifying_number = db.Column(db.Text(20), nullable=False, unique=True) # URI or other hospital generated number
     location = db.relationship('Bed', backref='patient', lazy=True)
@@ -63,6 +64,7 @@ class Patient(db.Model):
                         '{self.social_history}', 
                         '{self.allergies}', 
                         '{self.plan}'
+                        '{self.diagnosis}',
                         '{self.date_of_birth}', 
                         '{self.identifying_number}')"""
 

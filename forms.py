@@ -49,5 +49,8 @@ class EditForm(FlaskForm):
     social_history = TextAreaField('Social History:')
     allergies = TextAreaField('Allergies:')
     plan = TextAreaField('Plan:')
+    diagnosis = TextAreaField('Diagnosis:')
     assign_bed = SelectField('Select bed:', choices=[], validators=[data_required()])
     submit = SubmitField('Submit')
+
+
