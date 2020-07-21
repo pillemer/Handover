@@ -1,9 +1,9 @@
 from flask import render_template, redirect, flash, url_for, request
-from handover import app, db, bcrypt
-from handover.forms import RegistrationForm, LoginForm, AdmitForm, EditForm
-from handover.models import User, Bed, Patient, Investigation
+from Handover import app, db, bcrypt
+from Handover.forms import RegistrationForm, LoginForm, AdmitForm, EditForm
+from Handover.models import User, Bed, Patient, Investigation
 from flask_login import login_user, logout_user, current_user, login_required
-from handover.helpers import bed_choices, flash_errors
+from Handover.helpers import bed_choices, flash_errors
 
 
 @app.route('/')

@@ -1,9 +1,9 @@
 from datetime import datetime
-from handover import db, login_manager
+from Handover import db, login_manager
 from flask_login import UserMixin
 
 # > flask db migrate / upgrade / downgrade
-# >>> from handover import db  -import the database to effect changes from the python terminal
+# >>> from Handover import db  -import the database to effect changes from the python terminal
 # >>> db.create_all()          -to create the table in the models.py file and the db.
 # >>> db.drop_all()            -to erase all tables in the database.
 # >>> user_1 = User(username = '', password = '')  -to create a user

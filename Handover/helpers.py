@@ -1,7 +1,7 @@
 # some helpful functions for the website
 
-from handover import db
-from handover.models import User, Patient, Bed
+from Handover import db
+from Handover.models import User, Patient, Bed
 from flask import flash
 
 # helper function to popluate the dropdown list of beds for each patient

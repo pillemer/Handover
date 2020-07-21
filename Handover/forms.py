@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, DateField, SelectField
 from wtforms.validators import data_required, Length, EqualTo, ValidationError
-from handover.models import User, Bed, Patient
+from Handover.models import User, Bed, Patient
 
 
 class RegistrationForm(FlaskForm):
