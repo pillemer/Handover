@@ -214,7 +214,11 @@ def undo_advance_job(jn):
 
 ########################################  TODO  ###########################################################
 # if job selected is already on somebody's list you should have a little modal warning before assignment
-#
-# Should be able to update the job list from the patient notes
+# Add button to patient list to add investigation
+# Need to be able to mark jobs as 'actually done'/ 'delete'/ 'archived' or something
 # Add way to mark jobs as ordered and chased and maybe even a timeastamp and who it is assigned to.
 
+# Add new patient needs to have the same textboxes as the edit patient (add diagnosis)
+# See how to add newline in text box and make it appear in the patient list
+# Should be able to update the job list from the patient notes
+# jobs go under Plan, not Investigations

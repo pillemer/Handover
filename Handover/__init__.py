@@ -2,7 +2,7 @@
 # > $env:FLASK_APP = "application" (where 'application' is the name of the application) # noqa E501
 # > $env:FLASK_ENV = "development" (to set flask debug mode on and thus enable changes to load instead of having to quit and restart each time.) # noqa E501
 # > flask run
-# > flask db migrate / upgrade / downgrade
+
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
