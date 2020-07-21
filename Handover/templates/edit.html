@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="legend-bottom mb-4">Update Patient Information</legend>
+                <div>
+                    <h1>Information for patient number: {{ patient.identifying_number }}</h1>
+                </div><br>
+                <div>
+                    <h1>Presenting complaint: {{ patient.presenting_complaint }}</h1>
+                </div>
+                <div class="form-group">
+                    {{ form.past_medical_history.label(class="form-control-label") }}
+                    {{ form.past_medical_history(class="form-control-lg form-control") }}
+                </div>               
+                <div class="form-group">
+                    {{ form.past_surgical_history.label(class="form-control-label") }}
+                    {{ form.past_surgical_history(class="form-control-lg form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.medications.label(class="form-control-label") }}
+                    {{ form.medications(class="form-control-lg form-control") }}
+                </div>                
+                <div class="form-group">
+                    {{ form.social_history.label(class="form-control-label") }}
+                    {{ form.social_history(class="form-control-lg form-control") }}
+                </div>                
+                <div class="form-group">
+                    {{ form.allergies.label(class="form-control-label") }}
+                    {{ form.allergies(class="form-control-lg form-control") }}
+                </div>                
+                <div class="form-group">
+                    {{ form.plan.label(class="form-control-label") }}
+                    {{ form.plan(class="form-control-lg form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.diagnosis.label(class="form-control-label") }}
+                    {{ form.diagnosis(class="form-control-lg form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.assign_bed.label(class="form-control-label") }}
+                    {{ form.assign_bed(class="form-control-lg form-control") }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

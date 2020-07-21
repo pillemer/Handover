@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<br>
+    <div class="container">
+        <h1>Information for patient in {{ patient.location[0] }}</h1>
+    </div>
+    <div class="container">
+        <a class="btn btn-secondary" href="{{ url_for('edit', pn=patient.identifying_number) }}">Edit</a>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#dishcargeModal" href="{{ url_for('discharge', pn=patient.identifying_number) }}">Discharge</button>
+        <button class="btn btn-warning" data-toggle="modal" data-target="#jobModal">Add Job</button>
+    </div>
+    <br>
+    <table class="table table-striped">
+        <tbody>
+            <tr><td>Patient Number:</td><td>{{ patient.identifying_number }}</td></tr>
+            <tr><td>Date of Birth:</td><td>{{ patient.date_of_birth }}</td></tr>
+            <tr><td>Presenting complaint:</td><td>{{ patient.presenting_complaint }}</td></tr>
+            <tr><td>plan:</td><td>{{ patient.plan }}</td></tr>
+            <tr><td>Past surgical history:</td><td>{{ patient.past_surgical_history }}</td></tr>
+            <tr><td>Past Medical history:</td><td>{{ patient.past_medical_history }}</td></tr>
+            <tr><td>Medications:</td><td>{{ patient.medications }}</td></tr>
+            <tr><td>Social History:</td><td>{{ patient.social_history }}</td></tr>
+            <tr><td>Allergies:</td><td>{{ patient.allergies }}</td></tr>
+            <tr><td>Diagnosis:</td><td>{{ patient.diagnosis }}</td></tr>
+            <tr><td>Investigations</td><td>
+                {% for job in patient.investigations %}
+                    {% if job.ordered and not job.done %}  
+                        <li class="list-group-item list-group-item-danger">◪
+                    {% elif job.done and job.ordered %}
+                        <li class="list-group-item list-group-item-success">◼
+                    {% else %}
+                        <li class="list-group-item list-group-item-primary">◻
+                    {% endif %}
+                    {{ job.task }}</li>
+                {% endfor %}</td></tr>
+        </tbody>
+        </table>
+        <!-- Modal -->
+        <div class="modal fade" id="dishcargeModal" tabindex="-1" role="dialog" aria-labelledby="dishcargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="dishcargeModalLabel">Discharge Patient</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                Discharging a patient will permanently erase their details from the database. <br>
+                There is no undo button. <br>
+                Are you sure you want to continue?
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form action="{{ url_for('discharge', pn=patient.identifying_number) }}" method="POST">
+                    <input class='btn btn-danger' type="submit" value="Discharge">
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="modal fade" id="jobModal" tabindex="-1" role="dialog" aria-labelledby="jobModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="jobModalLabel">Add Job</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    Job name<br>
+                <form action="{{ url_for('add_job', pn=patient.identifying_number ) }}" method="POST">
+                    <input name="text">
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <input class='btn btn-danger' type="submit" value="Add">
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+{% endblock content %}

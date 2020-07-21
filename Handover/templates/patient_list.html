@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<br>
+    <div class="container">
+        <h1>Patient List</h1>
+    </div>
+    <table class="table table-striped">
+        <thead class="thead-dark"><tr>
+            <th>Bed number</th>
+            <th>Patient Number</th>
+            <th>Diagnosis</th>
+            <th>Investigations</th>
+            <th>Plan</th>
+            <th></th>
+        </tr></thead>
+        <tbody>
+        {% for bed in beds %}
+        <tr><td>{{ bed.bed_number }}</td>
+            <td>{{ bed.patient.identifying_number }}</td>
+            <td>{{ bed.patient.diagnosis }}</td>
+            <td>{% for job in bed.patient.investigations %}
+                    {% if job.ordered and not job.done %}  
+                        <li>◪
+                    {% elif job.done and job.ordered %}
+                        <li>◼
+                    {% else %}
+                        <li>◻
+                    {% endif %}
+                    {{ job.task }}</li>
+                {% endfor %}</td>
+            <td>{{ bed.patient.plan }}</td>
+            {% if bed.patient.identifying_number == NULL %}
+                <td></td></tr>
+            {% else %}
+                <td><a class="btn btn-success btn-sm float-right" href="{{ url_for('patient', pn=bed.patient.identifying_number) }}">Review</a></td></tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

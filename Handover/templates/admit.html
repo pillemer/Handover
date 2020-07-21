@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="legend-bottom mb-4">Admit New Patient</legend>
+                <div class="form-group">
+                    {{ form.identifying_number.label(class="form-control-label") }}
+                    {% if form.identifying_number.errors %}
+                    {{ form.identifying_number(class="form-control-lg form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.identifying_number.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.identifying_number(class="form-control-lg form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.presenting_complaint.label(class="form-control-label") }}
+                    {{ form.presenting_complaint(class="form-control-lg form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.past_medical_history.label(class="form-control-label") }}
+                    {{ form.past_medical_history(class="form-control-lg form-control") }}
+                </div>               
+                <div class="form-group">
+                    {{ form.past_surgical_history.label(class="form-control-label") }}
+                    {{ form.past_surgical_history(class="form-control-lg form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.medications.label(class="form-control-label") }}
+                    {{ form.medications(class="form-control-lg form-control") }}
+                </div>                
+                <div class="form-group">
+                    {{ form.social_history.label(class="form-control-label") }}
+                    {{ form.social_history(class="form-control-lg form-control") }}
+                </div>                
+                <div class="form-group">
+                    {{ form.allergies.label(class="form-control-label") }}
+                    {{ form.allergies(class="form-control-lg form-control") }}
+                </div>                
+                <div class="form-group">
+                    {{ form.plan.label(class="form-control-label") }}
+                    {{ form.plan(class="form-control-lg form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.date_of_birth.label(class="form-control-label") }}
+                    {% if form.date_of_birth.errors %}
+                    {{ form.date_of_birth(class="form-control-lg form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.date_of_birth.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor%}
+                        </div>
+                    {% else %}
+                        {{ form.date_of_birth(class="form-control-lg form-control", placeholder="DD-MM-YYYY") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.assign_bed.label(class="form-control-label") }}
+                    {{ form.assign_bed(class="form-control-lg form-control") }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}
