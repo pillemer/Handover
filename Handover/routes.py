@@ -182,7 +182,7 @@ def add_job(pn):
     db.session.add(job)
     db.session.commit()
     flash('Job added successfuly', 'success')
-    return redirect(url_for('patient', pn = patient.identifying_number))@app.route('/patient/<pn>/add_job', methods=['POST'])
+    return redirect(url_for('patient', pn = patient.identifying_number))
 
 @app.route('/job_list/<jn>/advance_job', methods=['GET', 'POST'])
 @login_required

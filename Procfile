@@ -1,0 +1,1 @@
+web: gunicorn Handover:app --log-file -
